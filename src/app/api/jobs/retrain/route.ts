@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+
+type ActionWithPaper = Prisma.UserPaperActionGetPayload<{ include: { paper: true } }>;
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization');
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
     });
 
     for (const user of users) {
-      const actions = await prisma.userPaperAction.findMany({
+      const actions: ActionWithPaper[] = await prisma.userPaperAction.findMany({
         where: {
           userId: user.id,
           createdAt: {
