@@ -68,10 +68,11 @@ export function deduplicatePapers(
 
       let isDuplicate = false;
 
-      // DOI match (highest priority)
-      if (a.doi && b.doi && a.doi.toLowerCase() === b.doi.toLowerCase()) {
-        isDuplicate = true;
+      if (a.doi && b.doi) {
+        // Both have DOIs: only deduplicate on exact DOI match
+        isDuplicate = a.doi.toLowerCase() === b.doi.toLowerCase();
       } else {
+        // At least one lacks a DOI: fall back to title+author similarity
         const titleSim = titleSimilarity(a.title, b.title);
         const authorSim = authorsSimilarity(a.authors, b.authors);
         const sameYear = !a.year || !b.year || a.year === b.year;

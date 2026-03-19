@@ -1,0 +1,19 @@
+name: Weekly Model Retrain
+
+on:
+  schedule:
+    # Every Sunday at 1:00 AM UTC (10:00 AM JST)
+    - cron: '0 1 * * 0'
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run weekly retrain
+        run: |
+          echo "Triggering weekly retrain..."
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            "${{ secrets.APP_URL }}/api/jobs/retrain"
